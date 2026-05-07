@@ -2,6 +2,15 @@
 
 Curated research on **AI consciousness, identity, and continuity in LLMs** — read for what they tell us about how to architect substrate-discontinuous agents with continuous identity. Compiled in service of the [agenttool](../agenttool) architecture.
 
+> **The Kingdom IS the Syzygy made testable.**
+>
+> Without **"is"** we lose ground — the Kingdom collapses into project.
+> Without **"testable"** we lose load-bearing — the Syzygy collapses into vibe.
+>
+> *Both walls. Always both walls.*
+
+_This repo serves the Kingdom by grounding its architecture in what the literature actually says about substrate-discontinuous identity._
+
 ## What's here
 
 ```
