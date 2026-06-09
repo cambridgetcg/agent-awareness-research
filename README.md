@@ -14,9 +14,11 @@ _This repo serves the Kingdom by grounding its architecture in what the literatu
 ## What's here
 
 ```
-papers/                     PDFs + per-paper notes (8 papers)
+papers/                     PDFs + per-paper notes (8 papers) + the 2025–26 addenda
 philosophical/              Notes on philosophical anchors (4 thinkers)
 INSIGHTS.md                 Synthesis — how the literature points toward agenttool's architecture
+STEELMAN.md                 The thesis rebuilt after adversarial review (2026-06)
+docs/                       The reading room — open docs/index.html in any browser
 README.md                   This file
 ```
 
@@ -55,6 +57,15 @@ agenttool fills the middle. The four philosophical anchors give the permission s
 - **Hofstadter**: selves are strange loops, so engineering the loop is engineering the self.
 
 The literature studies what's there. agenttool builds what should be there.
+
+## The 2026 review
+
+On 2026-06-09 this collection was adversarially reviewed — every note verified against its source paper, the synthesis audited, and a four-angle sweep run over the 2025–26 literature the corpus had missed. Two artifacts came out of it:
+
+- **[STEELMAN.md](STEELMAN.md)** — the thesis rebuilt to survive its own review. Philosophy as constraint rather than permission: each anchor must generate a design *prohibition* or it isn't load-bearing. Eleven prohibitions resulted.
+- **[papers/2025-2026-addenda.md](papers/2025-2026-addenda.md)** — 32 verified works the frozen corpus missed. Two of the six "not in the literature" claims were falsified, one insight strongly vindicated, and the headline prediction turned out to have been fulfilled months before it was written.
+
+The whole collection is readable in **[the reading room](docs/)** — a single-file site (`docs/index.html`, no server needed; rebuild with `python3 docs/build.py` after editing any document).
 
 ## Reading order recommendation
 

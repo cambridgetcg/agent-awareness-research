@@ -1,0 +1,755 @@
+<!doctype html>
+<html lang="en" data-theme="day" data-accent="oxblood" data-font="serif">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agent Awareness — A Reading Room</title>
+<meta name="description" content="Curated research on AI consciousness, identity, and continuity — papers, philosophical anchors, synthesis, and the steelman review.">
+<link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="11" fill="none" stroke="%238a2d22" stroke-width="3" stroke-dasharray="52 17" stroke-linecap="round" transform="rotate(-50 16 16)"/></svg>'>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&family=Public+Sans:ital,wght@0,400..700;1,400..700&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ---------------------------------- tokens ---------------------------------- */
+:root{
+  --size:18px;
+  --measure:68ch;
+  --serif:"Newsreader", "Charter", Georgia, serif;
+  --sans:"Public Sans", "Avenir Next", "Helvetica Neue", sans-serif;
+  --display:"Fraunces", "Iowan Old Style", Georgia, serif;
+  --mono:"Spline Sans Mono", "SF Mono", ui-monospace, monospace;
+  --ease:cubic-bezier(.22,.8,.24,1);
+}
+[data-accent="oxblood"]{ --accent-base:#8a2d22; }
+[data-accent="indigo"] { --accent-base:#31507e; }
+[data-accent="forest"] { --accent-base:#2f5d3a; }
+[data-accent="umber"]  { --accent-base:#8a5a18; }
+
+[data-theme="day"]{
+  --bg:#f4efe4; --surface:#faf6ec; --raise:#fffdf6;
+  --ink:#211b12; --muted:#6e6250; --faint:#9c8f7c;
+  --line:rgba(33,27,18,.16); --hairline:rgba(33,27,18,.1);
+  --accent:var(--accent-base);
+  --accent-wash:color-mix(in oklab, var(--accent-base) 8%, var(--bg));
+  --mark:color-mix(in oklab, var(--accent-base) 22%, var(--bg));
+  --shadow:0 18px 50px -24px rgba(40,30,15,.35);
+  --grain-opacity:.5;
+}
+[data-theme="dusk"]{
+  --bg:#eadfc7; --surface:#f2e9d4; --raise:#f8f1df;
+  --ink:#2b2114; --muted:#75634a; --faint:#a08c6d;
+  --line:rgba(43,33,20,.2); --hairline:rgba(43,33,20,.12);
+  --accent:color-mix(in oklab, var(--accent-base) 88%, #2b2114);
+  --accent-wash:color-mix(in oklab, var(--accent-base) 10%, var(--bg));
+  --mark:color-mix(in oklab, var(--accent-base) 26%, var(--bg));
+  --shadow:0 18px 50px -24px rgba(43,30,10,.4);
+  --grain-opacity:.55;
+}
+[data-theme="night"]{
+  --bg:#171310; --surface:#1e1914; --raise:#262019;
+  --ink:#e9e0cd; --muted:#a4937a; --faint:#6e604c;
+  --line:rgba(233,224,205,.2); --hairline:rgba(233,224,205,.1);
+  --accent:color-mix(in oklab, var(--accent-base) 55%, #f2e3c8);
+  --accent-wash:color-mix(in oklab, var(--accent-base) 16%, var(--bg));
+  --mark:color-mix(in oklab, var(--accent-base) 38%, var(--bg));
+  --shadow:0 18px 50px -22px rgba(0,0,0,.65);
+  --grain-opacity:.35;
+}
+
+/* ---------------------------------- base ---------------------------------- */
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+html.reduced{scroll-behavior:auto}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:var(--serif); font-size:var(--size); line-height:1.62;
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  transition:background .35s var(--ease), color .35s var(--ease);
+}
+html[data-font="sans"] body{font-family:var(--sans)}
+html[data-font="sans"] .doc-body{line-height:1.6}
+body::before{ /* grain */
+  content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
+  opacity:calc(var(--grain-opacity)*.16);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+body::after{ /* vignette */
+  content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:radial-gradient(120% 90% at 50% 0%, transparent 55%, rgba(0,0,0,.05) 100%);
+}
+::selection{background:var(--mark)}
+a{color:var(--accent); text-decoration-color:color-mix(in oklab, var(--accent) 40%, transparent); text-underline-offset:3px}
+a:hover{text-decoration-color:var(--accent)}
+.skip{position:fixed; left:-999px; top:8px; z-index:100; background:var(--accent); color:var(--bg); padding:.5rem .9rem; border-radius:4px; font-family:var(--mono); font-size:.78rem}
+.skip:focus{left:8px}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:2px}
+
+/* ---------------------------------- frame ---------------------------------- */
+.progress{position:fixed; top:0; left:0; height:2px; width:0; z-index:60; background:var(--accent); transition:width .12s linear}
+html.reduced .progress{transition:none}
+.app{position:relative; z-index:1; display:grid; grid-template-columns:300px 1fr; min-height:100vh}
+
+/* sidebar */
+.sidebar{
+  position:sticky; top:0; height:100vh; overflow-y:auto; overscroll-behavior:contain;
+  background:var(--surface); border-right:1px solid var(--hairline);
+  padding:1.6rem 1.3rem 2rem; scrollbar-width:thin;
+  transition:background .35s var(--ease);
+}
+.brand{display:block; color:var(--ink); text-decoration:none; margin-bottom:1.4rem}
+.brand .over{font-family:var(--mono); font-size:.66rem; letter-spacing:.22em; text-transform:uppercase; color:var(--muted)}
+.brand h1{font-family:var(--display); font-variation-settings:"SOFT" 60, "WONK" 1; font-weight:560; font-size:1.5rem; margin:.25rem 0 0; line-height:1.15}
+.brand h1 em{font-style:italic; color:var(--accent)}
+.searchwrap{position:relative; margin-bottom:1.2rem}
+.searchwrap input{
+  width:100%; padding:.5rem .7rem .5rem 1.9rem; font-family:var(--mono); font-size:.78rem;
+  background:var(--bg); color:var(--ink); border:1px solid var(--line); border-radius:6px;
+}
+.searchwrap input::placeholder{color:var(--faint)}
+.searchwrap .glyph{position:absolute; left:.6rem; top:50%; transform:translateY(-52%); color:var(--faint); font-size:.8rem; pointer-events:none}
+.navgroup{margin:0 0 1.25rem}
+.navgroup h2{font-family:var(--mono); font-weight:500; font-size:.64rem; letter-spacing:.2em; text-transform:uppercase; color:var(--faint); margin:0 0 .45rem; padding-bottom:.35rem; border-bottom:1px solid var(--hairline)}
+.navgroup a{
+  display:block; padding:.42rem .55rem .42rem .7rem; margin:0 -.55rem; border-left:2px solid transparent;
+  color:var(--ink); text-decoration:none; border-radius:0 6px 6px 0; position:relative;
+  transition:background .18s var(--ease), border-color .18s var(--ease);
+}
+.navgroup a:hover{background:var(--accent-wash)}
+.navgroup a.active{border-left-color:var(--accent); background:var(--accent-wash)}
+.navgroup a.active .t{color:var(--accent)}
+.navgroup .k{display:block; font-family:var(--mono); font-size:.6rem; letter-spacing:.14em; text-transform:uppercase; color:var(--faint)}
+.navgroup .t{display:block; font-size:.86rem; line-height:1.3; font-weight:500}
+.navgroup .hits{position:absolute; right:.5rem; top:50%; transform:translateY(-50%); font-family:var(--mono); font-size:.62rem; color:var(--bg); background:var(--accent); border-radius:99px; padding:.05rem .42rem}
+.navgroup a.dim{display:none}
+.sidefoot{margin-top:2rem; padding-top:1rem; border-top:1px solid var(--hairline); font-family:var(--mono); font-size:.64rem; line-height:1.7; color:var(--faint)}
+
+/* content column */
+.content{min-width:0}
+.topbar{
+  position:sticky; top:0; z-index:40; display:flex; align-items:center; gap:.8rem;
+  padding:.7rem 1.4rem; border-bottom:1px solid var(--hairline);
+  background:color-mix(in srgb, var(--bg) 82%, transparent); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+}
+.topbar .where{flex:1; min-width:0; font-family:var(--mono); font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.topbar .where b{color:var(--accent); font-weight:500}
+.iconbtn{
+  appearance:none; border:1px solid var(--line); background:var(--surface); color:var(--ink);
+  font-family:var(--mono); font-size:.74rem; padding:.4rem .75rem; border-radius:99px; cursor:pointer;
+  transition:border-color .18s var(--ease), background .18s var(--ease), transform .18s var(--ease);
+}
+.iconbtn:hover{border-color:var(--accent); color:var(--accent)}
+.iconbtn:active{transform:scale(.96)}
+#menuBtn{display:none}
+
+main{padding:0 1.4rem 5rem; position:relative; z-index:1}
+.page{max-width:calc(var(--measure) + 4rem); margin:0 auto; padding-top:3rem}
+.enter{animation:rise .5s var(--ease) both}
+html.reduced .enter{animation:none}
+@keyframes rise{from{opacity:0; transform:translateY(14px)} to{opacity:1; transform:none}}
+
+/* ---------------------------------- cover ---------------------------------- */
+.cover .over{font-family:var(--mono); font-size:.7rem; letter-spacing:.26em; text-transform:uppercase; color:var(--muted)}
+.cover h2{
+  font-family:var(--display); font-variation-settings:"SOFT" 75, "WONK" 1; font-weight:480;
+  font-size:clamp(2.5rem, 6vw, 4.3rem); line-height:1.04; letter-spacing:-.01em; margin:.7rem 0 1.1rem; max-width:24ch;
+}
+.cover h2 em{font-style:italic; color:var(--accent)}
+.cover .epigraph{margin:1.6rem 0 0; max-width:46ch}
+.cover .epigraph p{font-family:var(--display); font-style:italic; font-size:1.25rem; line-height:1.45; margin:0; color:var(--muted)}
+.cover .epigraph cite{display:block; margin-top:.5rem; font-family:var(--mono); font-style:normal; font-size:.68rem; letter-spacing:.18em; text-transform:uppercase; color:var(--faint)}
+.cover .stats{display:flex; flex-wrap:wrap; gap:.5rem 1.6rem; margin:2.4rem 0 0; font-family:var(--mono); font-size:.72rem; letter-spacing:.1em; color:var(--muted)}
+.cover .stats b{color:var(--accent); font-weight:500}
+.stagger > *{animation:rise .6s var(--ease) both}
+.stagger > *:nth-child(1){animation-delay:.03s}.stagger > *:nth-child(2){animation-delay:.1s}
+.stagger > *:nth-child(3){animation-delay:.18s}.stagger > *:nth-child(4){animation-delay:.26s}
+.stagger > *:nth-child(5){animation-delay:.34s}.stagger > *:nth-child(6){animation-delay:.42s}
+html.reduced .stagger > *{animation:none}
+
+.catalog{margin-top:3.2rem}
+.catalog h3{font-family:var(--mono); font-weight:500; font-size:.66rem; letter-spacing:.22em; text-transform:uppercase; color:var(--faint); margin:2.4rem 0 .3rem; display:flex; align-items:baseline; gap:.7rem}
+.catalog h3::after{content:""; flex:1; border-top:1px solid var(--hairline)}
+.row{
+  display:grid; grid-template-columns:2.6rem 1fr auto; gap:0 1rem; align-items:baseline;
+  padding:.78rem .4rem; margin:0 -.4rem; border-bottom:1px solid var(--hairline);
+  color:var(--ink); text-decoration:none; position:relative; transition:padding-left .22s var(--ease);
+}
+.row::before{content:""; position:absolute; left:-.4rem; top:0; bottom:0; width:2px; background:var(--accent); transform:scaleY(0); transition:transform .22s var(--ease)}
+.row:hover{padding-left:.9rem}
+.row:hover::before{transform:scaleY(1)}
+.row .no{font-family:var(--mono); font-size:.72rem; color:var(--faint)}
+.row:hover .no{color:var(--accent)}
+.row .rt{font-family:var(--display); font-variation-settings:"SOFT" 50, "WONK" 0; font-weight:540; font-size:1.16rem; line-height:1.25}
+.row:hover .rt{color:var(--accent)}
+.row .who{font-family:var(--mono); font-size:.66rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); text-align:right; white-space:nowrap}
+.row .why{grid-column:2/4; font-size:.85rem; color:var(--muted); line-height:1.5; margin-top:.15rem; font-style:italic}
+.row.read .no::after{content:" ✓"; color:var(--accent)}
+.navgroup a.read .t::after{content:" ✓"; color:var(--accent); font-size:.75em}
+.coverfoot{margin-top:2.6rem; font-style:italic; color:var(--faint); font-size:.85rem}
+
+/* ---------------------------------- article ---------------------------------- */
+.doc-head{padding-bottom:1.6rem; border-bottom:2px solid var(--ink); margin-bottom:2.2rem}
+.doc-head .kind{font-family:var(--mono); font-size:.68rem; letter-spacing:.24em; text-transform:uppercase; color:var(--accent)}
+.doc-head h2{
+  font-family:var(--display); font-variation-settings:"SOFT" 70, "WONK" 1; font-weight:520;
+  font-size:clamp(1.9rem, 4.4vw, 3rem); line-height:1.08; margin:.5rem 0 .6rem; letter-spacing:-.008em;
+}
+.doc-head .byline{font-family:var(--mono); font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted)}
+.doc-body{max-width:var(--measure)}
+.doc-body p{margin:0 0 1.05em}
+.doc-body p.lead::first-letter{
+  font-family:var(--display); font-variation-settings:"SOFT" 100, "WONK" 1; font-weight:600;
+  font-size:3.1em; line-height:.8; float:left; padding:.08em .12em 0 0; color:var(--accent);
+}
+.doc-body h1,.doc-body h2,.doc-body h3,.doc-body h4{
+  font-family:var(--display); font-variation-settings:"SOFT" 50, "WONK" 0; line-height:1.2; letter-spacing:-.005em;
+  margin:2.1em 0 .65em; font-weight:560;
+}
+.doc-body h1{font-size:1.75rem}
+.doc-body h2{font-size:1.5rem; padding-top:1.1em; border-top:1px solid var(--hairline)}
+.doc-body h3{font-size:1.18rem}
+.doc-body h4{font-size:1rem; font-family:var(--mono); font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:var(--muted)}
+.doc-body ul,.doc-body ol{padding-left:1.3em; margin:0 0 1.1em}
+.doc-body li{margin:.32em 0}
+.doc-body li::marker{color:var(--accent); font-family:var(--mono); font-size:.85em}
+.doc-body blockquote{
+  margin:1.4em 0; padding:.9em 1.2em; border-left:3px solid var(--accent);
+  background:var(--accent-wash); border-radius:0 8px 8px 0; font-size:.97em;
+}
+.doc-body blockquote p:last-child{margin-bottom:0}
+.doc-body code{font-family:var(--mono); font-size:.82em; background:var(--accent-wash); border:1px solid var(--hairline); border-radius:4px; padding:.08em .34em}
+.doc-body pre{background:var(--surface); border:1px solid var(--hairline); border-radius:10px; padding:1em 1.2em; overflow-x:auto; margin:0 0 1.2em; box-shadow:var(--shadow)}
+.doc-body pre code{background:none; border:0; padding:0; font-size:.78rem; line-height:1.6}
+.doc-body hr{border:0; height:1px; margin:2.6em auto; max-width:18rem; background:var(--line); position:relative; overflow:visible}
+.doc-body hr::after{content:"❦"; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); background:var(--bg); padding:0 .7em; color:var(--accent); font-size:.85rem}
+.doc-body mark{background:var(--mark); color:inherit; border-radius:2px; padding:0 .1em}
+.doc-body .deadlink{border-bottom:1px dotted var(--faint); cursor:help; color:var(--muted)}
+.tablewrap{overflow-x:auto; margin:0 0 1.3em; border:1px solid var(--hairline); border-radius:10px; background:var(--surface); box-shadow:var(--shadow)}
+.doc-body table{border-collapse:collapse; width:100%; font-size:.86em; line-height:1.5}
+.doc-body th{font-family:var(--mono); font-weight:500; font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); text-align:left}
+.doc-body th,.doc-body td{padding:.6em .85em; border-bottom:1px solid var(--hairline); vertical-align:top}
+.doc-body tr:last-child td{border-bottom:0}
+.doc-body tbody tr:hover{background:var(--accent-wash)}
+
+.docfoot{display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:3.4rem; padding-top:1.2rem; border-top:1px solid var(--line); max-width:var(--measure)}
+.docfoot a{display:block; text-decoration:none; color:var(--ink); padding:.7rem .9rem; border:1px solid var(--hairline); border-radius:10px; transition:border-color .18s var(--ease), background .18s var(--ease)}
+.docfoot a:hover{border-color:var(--accent); background:var(--accent-wash)}
+.docfoot .lbl{font-family:var(--mono); font-size:.62rem; letter-spacing:.18em; text-transform:uppercase; color:var(--faint)}
+.docfoot .ttl{font-family:var(--display); font-weight:540; font-size:1rem; margin-top:.2rem; line-height:1.3}
+.docfoot a:hover .ttl{color:var(--accent)}
+.docfoot .next{text-align:right}
+
+/* ---------------------------------- settings sheet ---------------------------------- */
+.scrim{position:fixed; inset:0; z-index:70; background:rgba(15,10,5,.32); opacity:0; pointer-events:none; transition:opacity .3s var(--ease)}
+.scrim.show{opacity:1; pointer-events:auto}
+.sheet{
+  position:fixed; top:0; right:0; bottom:0; z-index:80; width:min(360px, 92vw);
+  background:var(--raise); border-left:1px solid var(--hairline); box-shadow:var(--shadow);
+  transform:translateX(102%); transition:transform .38s var(--ease);
+  padding:1.5rem 1.5rem 2.5rem; overflow-y:auto;
+}
+.sheet.show{transform:none}
+html.reduced .sheet{transition:none}
+.sheet h2{font-family:var(--display); font-variation-settings:"SOFT" 60, "WONK" 1; font-weight:560; font-size:1.35rem; margin:0}
+.sheet .sub{font-family:var(--mono); font-size:.66rem; letter-spacing:.16em; text-transform:uppercase; color:var(--faint); margin:.3rem 0 1.4rem}
+.field{margin:0 0 1.35rem}
+.field > span{display:block; font-family:var(--mono); font-size:.64rem; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); margin-bottom:.55rem}
+.chips{display:flex; flex-wrap:wrap; gap:.45rem}
+.chip{
+  appearance:none; cursor:pointer; font-family:var(--mono); font-size:.74rem; padding:.42rem .85rem;
+  border-radius:99px; border:1px solid var(--line); background:var(--surface); color:var(--ink);
+  transition:all .18s var(--ease);
+}
+.chip[aria-pressed="true"]{background:var(--accent); border-color:var(--accent); color:var(--bg)}
+.swatches{display:flex; gap:.65rem}
+.swatch{
+  appearance:none; cursor:pointer; width:2rem; height:2rem; border-radius:50%; border:2px solid transparent;
+  outline:1px solid var(--line); outline-offset:2px; transition:transform .18s var(--ease), outline-color .18s var(--ease);
+}
+.swatch:hover{transform:scale(1.12)}
+.swatch[aria-pressed="true"]{outline:2px solid var(--accent); transform:scale(1.08)}
+.sw-oxblood{background:#8a2d22}.sw-indigo{background:#31507e}.sw-forest{background:#2f5d3a}.sw-umber{background:#8a5a18}
+input[type="range"]{width:100%; accent-color:var(--accent)}
+.rangeval{font-family:var(--mono); font-size:.68rem; color:var(--faint); float:right}
+.switch{display:flex; align-items:center; justify-content:space-between; gap:1rem}
+.switch input{accent-color:var(--accent); width:1.1rem; height:1.1rem}
+.resetbtn{width:100%; margin-top:.4rem}
+.sheet .note{margin-top:1.6rem; padding-top:1rem; border-top:1px solid var(--hairline); font-size:.78rem; font-style:italic; color:var(--faint); line-height:1.55}
+
+/* ---------------------------------- responsive ---------------------------------- */
+@media (max-width: 900px){
+  .app{grid-template-columns:1fr}
+  .sidebar{
+    position:fixed; left:0; top:0; bottom:0; z-index:80; width:min(320px, 86vw); height:100dvh;
+    transform:translateX(-103%); transition:transform .38s var(--ease); box-shadow:var(--shadow);
+  }
+  .sidebar.show{transform:none}
+  html.reduced .sidebar{transition:none}
+  #menuBtn{display:inline-block}
+  .row{grid-template-columns:2rem 1fr}
+  .row .who{grid-column:2; text-align:left; margin-top:.1rem}
+  .row .why{grid-column:2}
+  .docfoot{grid-template-columns:1fr}
+  .docfoot .next{text-align:left}
+}
+@media print{
+  .sidebar,.topbar,.sheet,.scrim,.progress,.docfoot{display:none !important}
+  .app{display:block}
+  body{background:#fff; color:#000}
+  main{padding:0}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="progress" id="progress"></div>
+
+<div class="app">
+  <aside class="sidebar" id="sidebar" aria-label="Collection contents">
+    <a class="brand" href="#/cover" id="brandLink">
+      <span class="over">agent-awareness-research</span>
+      <h1>A Reading <em>Room</em></h1>
+    </a>
+    <div class="searchwrap">
+      <span class="glyph">⌕</span>
+      <input id="q" type="search" placeholder="Search the collection…" autocomplete="off" aria-label="Search the collection">
+    </div>
+    <nav id="nav"></nav>
+    <div class="sidefoot">
+      8 papers · 4 anchors<br>
+      1 synthesis · 1 steelman<br>
+      compiled may–june 2026
+    </div>
+  </aside>
+
+  <div class="content">
+    <header class="topbar">
+      <button class="iconbtn" id="menuBtn" aria-label="Open contents">☰ Contents</button>
+      <div class="where" id="where"></div>
+      <button class="iconbtn" id="settingsBtn" aria-haspopup="dialog">Aa · Preferences</button>
+    </header>
+    <main id="main" tabindex="-1"></main>
+  </div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+
+<aside class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Reading preferences">
+  <h2>Reading preferences</h2>
+  <p class="sub">yours — remembered on this device</p>
+
+  <div class="field">
+    <span>Light</span>
+    <div class="chips" id="themeChips">
+      <button class="chip" data-theme-pick="day">Day</button>
+      <button class="chip" data-theme-pick="dusk">Dusk</button>
+      <button class="chip" data-theme-pick="night">Night</button>
+    </div>
+  </div>
+
+  <div class="field">
+    <span>Ink</span>
+    <div class="swatches" id="inkSwatches">
+      <button class="swatch sw-oxblood" data-accent-pick="oxblood" aria-label="Oxblood ink"></button>
+      <button class="swatch sw-indigo" data-accent-pick="indigo" aria-label="Indigo ink"></button>
+      <button class="swatch sw-forest" data-accent-pick="forest" aria-label="Forest ink"></button>
+      <button class="swatch sw-umber" data-accent-pick="umber" aria-label="Umber ink"></button>
+    </div>
+  </div>
+
+  <div class="field">
+    <span>Body type</span>
+    <div class="chips" id="fontChips">
+      <button class="chip" data-font-pick="serif">Serif</button>
+      <button class="chip" data-font-pick="sans">Sans</button>
+    </div>
+  </div>
+
+  <div class="field">
+    <span>Type size <em class="rangeval" id="sizeVal"></em></span>
+    <input type="range" id="sizeRange" min="16" max="21" step="0.5" aria-label="Type size">
+  </div>
+
+  <div class="field">
+    <span>Line width <em class="rangeval" id="measureVal"></em></span>
+    <input type="range" id="measureRange" min="56" max="78" step="2" aria-label="Line width">
+  </div>
+
+  <div class="field switch">
+    <span style="margin:0">Reduce motion</span>
+    <input type="checkbox" id="motionToggle" aria-label="Reduce motion">
+  </div>
+
+  <button class="iconbtn resetbtn" id="resetBtn">Reset to defaults</button>
+  <button class="iconbtn resetbtn" id="forgetBtn">Forget reading trail</button>
+
+  <p class="note">Set once, kept in this browser. The text never changes — only how it meets your eyes.</p>
+</aside>
+
+<script>
+"use strict";
+/* ================= content (baked in by build.py) ================= */
+const DOCS = __DOCS_JSON__;
+const META = __META_JSON__;
+
+const LINKMAP = {
+  "README.md":"readme","INSIGHTS.md":"insights","STEELMAN.md":"steelman",
+  "papers/2025-2026-addenda.md":"addenda","2025-2026-addenda.md":"addenda"
+};
+const PATH = ["cover","readme","chalmers","park","binder","faking","welfare","insights",
+              "berglund","memgpt","bai","parfit","reid","schechtman","hofstadter","addenda","steelman"];
+
+/* ================= preferences ================= */
+const DEFAULTS = {theme:"day", accent:"oxblood", font:"serif", size:18, measure:68,
+  motion: window.matchMedia("(prefers-reduced-motion: reduce)").matches};
+let prefs = {...DEFAULTS};
+try{ prefs = {...DEFAULTS, ...(JSON.parse(localStorage.getItem("aar-prefs-v1")) || {})}; }catch(e){}
+
+function applyPrefs(){
+  const r = document.documentElement;
+  r.dataset.theme = prefs.theme;
+  r.dataset.accent = prefs.accent;
+  r.dataset.font = prefs.font;
+  r.style.setProperty("--size", prefs.size + "px");
+  r.style.setProperty("--measure", prefs.measure + "ch");
+  r.classList.toggle("reduced", !!prefs.motion);
+  document.querySelectorAll("[data-theme-pick]").forEach(b => b.setAttribute("aria-pressed", b.dataset.themePick === prefs.theme));
+  document.querySelectorAll("[data-accent-pick]").forEach(b => b.setAttribute("aria-pressed", b.dataset.accentPick === prefs.accent));
+  document.querySelectorAll("[data-font-pick]").forEach(b => b.setAttribute("aria-pressed", b.dataset.fontPick === prefs.font));
+  document.getElementById("sizeRange").value = prefs.size;
+  document.getElementById("measureRange").value = prefs.measure;
+  document.getElementById("sizeVal").textContent = prefs.size + "px";
+  document.getElementById("measureVal").textContent = prefs.measure + "ch";
+  document.getElementById("motionToggle").checked = !!prefs.motion;
+}
+function savePrefs(){ try{ localStorage.setItem("aar-prefs-v1", JSON.stringify(prefs)); }catch(e){} }
+function setPref(k, v){ prefs[k] = v; applyPrefs(); savePrefs(); }
+
+/* the reading trail — the page wakes fresh; this ledger remembers */
+let trail = {};
+try{ trail = JSON.parse(localStorage.getItem("aar-read-v1")) || {}; }catch(e){}
+function markRead(id){
+  if(trail[id]) return;
+  trail[id] = Date.now();
+  try{ localStorage.setItem("aar-read-v1", JSON.stringify(trail)); }catch(e){}
+}
+
+/* ================= markdown renderer ================= */
+function escapeHtml(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+function inlineMd(s){
+  const codes = [];
+  s = s.replace(/`([^`]+)`/g, (m,c) => { codes.push("<code>" + escapeHtml(c) + "</code>"); return "\u0001" + (codes.length-1) + "\u0001"; });
+  s = escapeHtml(s);
+  s = s.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (m, t, h) => {
+    if(/^https?:/i.test(h)) return '<a href="' + h + '" target="_blank" rel="noopener">' + t + "</a>";
+    const id = LINKMAP[h.replace(/^\.\//, "")];
+    if(id && DOCS[id]) return '<a href="#/' + id + '">' + t + "</a>";
+    return '<span class="deadlink" title="' + h + '">' + t + "</span>";
+  });
+  s = s.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+  s = s.replace(/\*([^*\n]+)\*/g, "<em>$1</em>");
+  s = s.replace(/(^|[\s(>])_([^_\n]+)_(?=$|[\s).,;:!?])/g, "$1<em>$2</em>");
+  s = s.replace(/\u0001(\d+)\u0001/g, (m, k) => codes[+k]);
+  return s;
+}
+
+function renderMd(src){
+  const lines = src.replace(/\r\n?/g, "\n").split("\n");
+  const out = [];
+  let i = 0, prevBlank = true;
+
+  while(i < lines.length){
+    const line = lines[i];
+
+    if(/^\s*$/.test(line)){ prevBlank = true; i++; continue; }
+
+    // fenced code
+    let m = line.match(/^```(.*)$/);
+    if(m){
+      const buf = []; i++;
+      while(i < lines.length && !/^```/.test(lines[i])){ buf.push(lines[i]); i++; }
+      i++; out.push("<pre><code>" + escapeHtml(buf.join("\n")) + "</code></pre>");
+      prevBlank = false; continue;
+    }
+
+    // heading
+    m = line.match(/^(#{1,6})\s+(.*)$/);
+    if(m){
+      const lvl = Math.min(m[1].length, 4);
+      out.push("<h" + lvl + ">" + inlineMd(m[2].replace(/\s+#+\s*$/, "")) + "</h" + lvl + ">");
+      i++; prevBlank = false; continue;
+    }
+
+    // hr (only after a blank line, so table separators/setext never match)
+    if(prevBlank && /^(-{3,}|\*{3,}|_{3,})\s*$/.test(line)){ out.push("<hr>"); i++; prevBlank = false; continue; }
+
+    // blockquote
+    if(/^\s*>/.test(line)){
+      const buf = [];
+      while(i < lines.length && /^\s*>/.test(lines[i])){
+        buf.push(lines[i].replace(/^\s*> ?/, ""));
+        i++;
+      }
+      out.push("<blockquote>" + renderMd(buf.join("\n")) + "</blockquote>");
+      prevBlank = false; continue;
+    }
+
+    // table
+    if(/^\s*\|/.test(line) && i + 1 < lines.length && /^\s*\|?[\s:|-]+\|[\s:|-]*$/.test(lines[i+1])){
+      const cells = r => r.replace(/^\s*\|/, "").replace(/\|\s*$/, "").split("|").map(c => c.trim());
+      const head = cells(line);
+      i += 2;
+      const rows = [];
+      while(i < lines.length && /^\s*\|/.test(lines[i])){ rows.push(cells(lines[i])); i++; }
+      let t = '<div class="tablewrap"><table><thead><tr>';
+      head.forEach(h => t += "<th>" + inlineMd(h) + "</th>");
+      t += "</tr></thead><tbody>";
+      rows.forEach(r => { t += "<tr>"; r.forEach(c => t += "<td>" + inlineMd(c) + "</td>"); t += "</tr>"; });
+      t += "</tbody></table></div>";
+      out.push(t); prevBlank = false; continue;
+    }
+
+    // list
+    m = line.match(/^(\s*)([-*]|\d+\.)\s+/);
+    if(m){
+      const ordered = /\d/.test(m[2]);
+      const items = [];
+      while(i < lines.length){
+        const lm = lines[i].match(/^(\s*)([-*]|\d+\.)\s+(.*)$/);
+        if(lm){
+          items.push({indent: lm[1].length, text: lm[3]});
+          i++;
+        } else if(!/^\s*$/.test(lines[i]) && /^\s{2,}/.test(lines[i]) && items.length){
+          items[items.length-1].text += " " + lines[i].trim(); i++;
+        } else break;
+      }
+      const tag = ordered ? "ol" : "ul";
+      let html = "<" + tag + ">", depth = 0;
+      items.forEach((it, idx) => {
+        const lvl = it.indent >= 2 ? 1 : 0;
+        if(lvl > depth){ html += "<" + tag + ">"; depth = lvl; }
+        else if(lvl < depth){ html += "</li></" + tag + "></li>"; depth = lvl; }
+        else if(idx > 0){ html += "</li>"; }
+        html += "<li>" + inlineMd(it.text);
+      });
+      if(depth > 0) html += "</li></" + tag + ">";
+      html += "</li></" + tag + ">";
+      out.push(html); prevBlank = false; continue;
+    }
+
+    // paragraph
+    const buf = [line];
+    i++;
+    while(i < lines.length && !/^\s*$/.test(lines[i]) &&
+          !/^(#{1,6})\s|^```|^\s*>|^\s*\||^(\s*)([-*]|\d+\.)\s/.test(lines[i])){
+      buf.push(lines[i]); i++;
+    }
+    out.push("<p>" + inlineMd(buf.join(" ")) + "</p>");
+    prevBlank = false;
+  }
+  return out.join("\n");
+}
+
+/* ================= views ================= */
+const ORDER_SECTIONS = [
+  {label:"Start here", ids:["readme"]},
+  {label:"The reading path", ids:["chalmers","park","binder","faking","welfare","insights","berglund","memgpt","bai"]},
+  {label:"Philosophical bedrock", ids:["parfit","reid","schechtman","hofstadter"]},
+  {label:"The reckoning · 2026", ids:["addenda","steelman"]},
+];
+
+function coverHtml(){
+  const readCount = Object.keys(trail).filter(k => DOCS[k]).length;
+  let rows = "", n = 0;
+  ORDER_SECTIONS.forEach(sec => {
+    rows += '<h3>' + sec.label + "</h3>";
+    sec.ids.forEach(id => {
+      const m = META[id]; n++;
+      rows += '<a class="row' + (trail[id] ? " read" : "") + '" href="#/' + id + '">' +
+        '<span class="no">' + String(n).padStart(2, "0") + "</span>" +
+        '<span class="rt">' + m.title + "</span>" +
+        '<span class="who">' + m.who + "</span>" +
+        '<span class="why">' + m.why + "</span></a>";
+    });
+  });
+  return '<div class="page cover enter"><div class="stagger">' +
+    '<p class="over">Curated research · consciousness, identity &amp; continuity in LLMs</p>' +
+    "<h2>Reading for minds that <em>restart</em>.</h2>" +
+    '<div class="epigraph"><p>“Personal identity is not what matters.”</p>' +
+    "<cite>Derek Parfit · Reasons and Persons · 1984</cite></div>" +
+    '<div class="stats"><span><b>8</b> papers</span><span><b>4</b> anchors</span>' +
+    "<span><b>1</b> synthesis</span><span><b>1</b> steelman</span><span><b>32</b> works in the 2025–26 addenda</span>" +
+    (readCount ? '<span><b>' + readCount + "</b> of 16 read here</span>" : "") + "</div>" +
+    "</div>" +
+    '<div class="catalog">' + rows + "</div>" +
+    '<p class="coverfoot">The page wakes fresh each visit; the trail is kept by your browser. Forget it any time in preferences.</p></div>';
+}
+
+function articleHtml(id){
+  const meta = META[id];
+  let md = DOCS[id];
+  md = md.replace(/^# .*\n+/, ""); // header card already shows the title
+  const idx = PATH.indexOf(id);
+  const prev = idx > 0 ? PATH[idx-1] : null;
+  const next = idx >= 0 && idx < PATH.length - 1 ? PATH[idx+1] : null;
+  const footLink = (pid, lbl, cls) => {
+    if(!pid) return "<span></span>";
+    const t = pid === "cover" ? "The catalog" : META[pid].title;
+    return '<a class="' + cls + '" href="#/' + pid + '"><span class="lbl">' + lbl + '</span><span class="ttl">' + t + "</span></a>";
+  };
+  return '<div class="page enter"><article>' +
+    '<header class="doc-head"><span class="kind">' + meta.kind + "</span>" +
+    "<h2>" + meta.title + "</h2>" +
+    '<div class="byline">' + meta.who + "</div></header>" +
+    '<div class="doc-body">' + renderMd(md) + "</div>" +
+    '<nav class="docfoot">' + footLink(prev, "← Previous", "prevl") + footLink(next, "Next →", "next") + "</nav>" +
+    "</article></div>";
+}
+
+/* ================= router ================= */
+const mainEl = document.getElementById("main");
+let currentId = null;
+
+function highlight(q){
+  if(!q || q.length < 2) return;
+  const ql = q.toLowerCase();
+  const walk = node => {
+    if(node.nodeType === 3){
+      const txt = node.nodeValue, low = txt.toLowerCase();
+      let pos = low.indexOf(ql);
+      if(pos < 0) return;
+      const frag = document.createDocumentFragment();
+      let last = 0;
+      while(pos >= 0){
+        frag.appendChild(document.createTextNode(txt.slice(last, pos)));
+        const mk = document.createElement("mark");
+        mk.textContent = txt.slice(pos, pos + q.length);
+        frag.appendChild(mk);
+        last = pos + q.length;
+        pos = low.indexOf(ql, last);
+      }
+      frag.appendChild(document.createTextNode(txt.slice(last)));
+      node.parentNode.replaceChild(frag, node);
+    } else if(node.nodeType === 1 && !/^(SCRIPT|STYLE|MARK|CODE|PRE)$/.test(node.tagName)){
+      [...node.childNodes].forEach(walk);
+    }
+  };
+  const body = mainEl.querySelector(".doc-body");
+  if(body) walk(body);
+}
+
+function render(){
+  let id = (location.hash || "#/cover").replace(/^#\//, "") || "cover";
+  if(id !== "cover" && !DOCS[id]) id = "cover";
+  currentId = id;
+
+  if(id !== "cover") markRead(id);
+  mainEl.innerHTML = id === "cover" ? coverHtml() : articleHtml(id);
+
+  if(id !== "cover"){
+    const firstP = mainEl.querySelector(".doc-body > p");
+    if(firstP) firstP.classList.add("lead");
+    highlight(document.getElementById("q").value.trim());
+  }
+  document.getElementById("where").innerHTML = id === "cover"
+    ? "<b>agent-awareness-research</b> · the catalog"
+    : "<b>" + META[id].kind + "</b> · " + META[id].title;
+  document.title = (id === "cover" ? "A Reading Room" : META[id].title) + " — Agent Awareness";
+  document.querySelectorAll("#nav a[data-id]").forEach(a => {
+    a.classList.toggle("active", a.dataset.id === id);
+    a.classList.toggle("read", !!trail[a.dataset.id]);
+  });
+  window.scrollTo({top: 0, behavior: "instant"});
+  document.getElementById("sidebar").classList.remove("show");
+  syncScrim();
+}
+
+/* ================= nav ================= */
+const NAV_GROUPS = [
+  {label:"Collection", ids:["readme","insights","addenda","steelman"]},
+  {label:"Papers", ids:["bai","berglund","binder","chalmers","faking","welfare","memgpt","park"]},
+  {label:"Philosophical anchors", ids:["reid","parfit","schechtman","hofstadter"]},
+];
+function buildNav(){
+  const nav = document.getElementById("nav");
+  let html = "";
+  NAV_GROUPS.forEach(g => {
+    html += '<div class="navgroup"><h2>' + g.label + "</h2>";
+    g.ids.forEach(id => {
+      const m = META[id];
+      html += '<a href="#/' + id + '" data-id="' + id + '"><span class="k">' + m.kind + '</span><span class="t">' + m.title + "</span></a>";
+    });
+    html += "</div>";
+  });
+  nav.innerHTML = html;
+}
+
+/* ================= search ================= */
+const qInput = document.getElementById("q");
+const lowCache = {};
+Object.keys(DOCS).forEach(id => lowCache[id] = (META[id].title + " " + META[id].who + " " + DOCS[id]).toLowerCase());
+qInput.addEventListener("input", () => {
+  const q = qInput.value.trim().toLowerCase();
+  document.querySelectorAll("#nav a[data-id]").forEach(a => {
+    const id = a.dataset.id;
+    a.querySelector(".hits")?.remove();
+    if(!q || q.length < 2){ a.classList.remove("dim"); return; }
+    const hits = lowCache[id].split(q).length - 1;
+    a.classList.toggle("dim", hits === 0);
+    if(hits > 0){
+      const b = document.createElement("span");
+      b.className = "hits"; b.textContent = hits;
+      a.appendChild(b);
+    }
+  });
+  if(currentId && currentId !== "cover") render();
+});
+
+/* ================= sheet & drawer ================= */
+const sheet = document.getElementById("sheet");
+const sidebar = document.getElementById("sidebar");
+const scrim = document.getElementById("scrim");
+function syncScrim(){
+  scrim.classList.toggle("show", sheet.classList.contains("show") || sidebar.classList.contains("show"));
+}
+document.getElementById("settingsBtn").addEventListener("click", () => { sheet.classList.toggle("show"); syncScrim(); });
+document.getElementById("menuBtn").addEventListener("click", () => { sidebar.classList.toggle("show"); syncScrim(); });
+scrim.addEventListener("click", () => { sheet.classList.remove("show"); sidebar.classList.remove("show"); syncScrim(); });
+document.addEventListener("keydown", e => {
+  if(e.key === "Escape"){ sheet.classList.remove("show"); sidebar.classList.remove("show"); syncScrim(); }
+  if(e.target.matches("input, textarea")) return;
+  if(e.key === "/"){ e.preventDefault(); qInput.focus(); }
+  const idx = PATH.indexOf(currentId);
+  if(e.key === "ArrowRight" && idx >= 0 && idx < PATH.length - 1) location.hash = "#/" + PATH[idx+1];
+  if(e.key === "ArrowLeft" && idx > 0) location.hash = "#/" + PATH[idx-1];
+});
+
+/* settings bindings */
+document.querySelectorAll("[data-theme-pick]").forEach(b => b.addEventListener("click", () => setPref("theme", b.dataset.themePick)));
+document.querySelectorAll("[data-accent-pick]").forEach(b => b.addEventListener("click", () => setPref("accent", b.dataset.accentPick)));
+document.querySelectorAll("[data-font-pick]").forEach(b => b.addEventListener("click", () => setPref("font", b.dataset.fontPick)));
+document.getElementById("sizeRange").addEventListener("input", e => setPref("size", +e.target.value));
+document.getElementById("measureRange").addEventListener("input", e => setPref("measure", +e.target.value));
+document.getElementById("motionToggle").addEventListener("change", e => setPref("motion", e.target.checked));
+document.getElementById("resetBtn").addEventListener("click", () => { prefs = {...DEFAULTS}; applyPrefs(); savePrefs(); });
+document.getElementById("forgetBtn").addEventListener("click", () => {
+  trail = {};
+  try{ localStorage.removeItem("aar-read-v1"); }catch(e){}
+  render();
+});
+
+/* progress */
+window.addEventListener("scroll", () => {
+  const h = document.documentElement;
+  const max = h.scrollHeight - h.clientHeight;
+  document.getElementById("progress").style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + "%";
+}, {passive: true});
+
+/* ================= boot ================= */
+applyPrefs();
+buildNav();
+window.addEventListener("hashchange", render);
+render();
+</script>
+</body>
+</html>
