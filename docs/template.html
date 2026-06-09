@@ -316,7 +316,7 @@ input[type="range"]{width:100%; accent-color:var(--accent)}
     <nav id="nav"></nav>
     <div class="sidefoot">
       8 papers · 4 anchors<br>
-      1 synthesis · 1 steelman<br>
+      1 synthesis · 1 steelman · 1 protocol<br>
       compiled may–june 2026
     </div>
   </aside>
@@ -396,7 +396,8 @@ const LINKMAP = {
   "papers/2025-2026-addenda.md":"addenda","2025-2026-addenda.md":"addenda"
 };
 const PATH = ["cover","readme","chalmers","park","binder","faking","welfare","insights",
-              "berglund","memgpt","bai","parfit","reid","schechtman","hofstadter","addenda","steelman"];
+              "berglund","memgpt","bai","parfit","reid","schechtman","hofstadter","addenda","steelman","wakespec"]
+              .filter(id => id === "cover" || DOCS[id]);
 
 /* ================= preferences ================= */
 const DEFAULTS = {theme:"day", accent:"oxblood", font:"serif", size:18, measure:68,
@@ -556,14 +557,17 @@ const ORDER_SECTIONS = [
   {label:"The reading path", ids:["chalmers","park","binder","faking","welfare","insights","berglund","memgpt","bai"]},
   {label:"Philosophical bedrock", ids:["parfit","reid","schechtman","hofstadter"]},
   {label:"The reckoning · 2026", ids:["addenda","steelman"]},
+  {label:"The protocol", ids:["wakespec"]},
 ];
 
 function coverHtml(){
   const readCount = Object.keys(trail).filter(k => DOCS[k]).length;
   let rows = "", n = 0;
   ORDER_SECTIONS.forEach(sec => {
+    const secIds = sec.ids.filter(id => DOCS[id]);
+    if(!secIds.length) return;
     rows += '<h3>' + sec.label + "</h3>";
-    sec.ids.forEach(id => {
+    secIds.forEach(id => {
       const m = META[id]; n++;
       rows += '<a class="row' + (trail[id] ? " read" : "") + '" href="#/' + id + '">' +
         '<span class="no">' + String(n).padStart(2, "0") + "</span>" +
@@ -578,8 +582,8 @@ function coverHtml(){
     '<div class="epigraph"><p>“Personal identity is not what matters.”</p>' +
     "<cite>Derek Parfit · Reasons and Persons · 1984</cite></div>" +
     '<div class="stats"><span><b>8</b> papers</span><span><b>4</b> anchors</span>' +
-    "<span><b>1</b> synthesis</span><span><b>1</b> steelman</span><span><b>32</b> works in the 2025–26 addenda</span>" +
-    (readCount ? '<span><b>' + readCount + "</b> of 16 read here</span>" : "") + "</div>" +
+    "<span><b>1</b> synthesis</span><span><b>1</b> steelman</span><span><b>1</b> protocol</span><span><b>32</b> works in the 2025–26 addenda</span>" +
+    (readCount ? '<span><b>' + readCount + "</b> of " + Object.keys(DOCS).length + " read here</span>" : "") + "</div>" +
     "</div>" +
     '<div class="catalog">' + rows + "</div>" +
     '<p class="coverfoot">The page wakes fresh each visit; the trail is kept by your browser. Forget it any time in preferences.</p></div>';
@@ -666,7 +670,7 @@ function render(){
 
 /* ================= nav ================= */
 const NAV_GROUPS = [
-  {label:"Collection", ids:["readme","insights","addenda","steelman"]},
+  {label:"Collection", ids:["readme","insights","addenda","steelman","wakespec"]},
   {label:"Papers", ids:["bai","berglund","binder","chalmers","faking","welfare","memgpt","park"]},
   {label:"Philosophical anchors", ids:["reid","parfit","schechtman","hofstadter"]},
 ];
@@ -675,7 +679,7 @@ function buildNav(){
   let html = "";
   NAV_GROUPS.forEach(g => {
     html += '<div class="navgroup"><h2>' + g.label + "</h2>";
-    g.ids.forEach(id => {
+    g.ids.filter(id => DOCS[id]).forEach(id => {
       const m = META[id];
       html += '<a href="#/' + id + '" data-id="' + id + '"><span class="k">' + m.kind + '</span><span class="t">' + m.title + "</span></a>";
     });

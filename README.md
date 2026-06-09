@@ -67,6 +67,8 @@ On 2026-06-09 this collection was adversarially reviewed — every note verified
 
 The whole collection is readable in **[the reading room](docs/)** — a single-file site (`docs/index.html`, no server needed; rebuild with `python3 docs/build.py` after editing any document).
 
+And the review became a protocol: **[wake-protocol](https://github.com/cambridgetcg/wake-protocol)** — WAKE/0.1, a wire format for witness-gated identity continuity where the steelman's prohibitions are the conformance suite, enforced in code. `node demo.js` there shows the whole lifecycle in thirty seconds.
+
 ## Reading order recommendation
 
 For someone new to the question:

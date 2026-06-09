@@ -44,12 +44,17 @@ DOCS = {
                    "Selves are made by self-narration — and by the people who hold your place."),
     "hofstadter": ("philosophical/hofstadter-strange-loops.md", "I Am a Strange Loop", "Douglas Hofstadter · 2007", "Anchor · 2007",
                    "The self as self-referential pattern — surviving, at low resolution, in other media."),
+    "wakespec":   ("../wake-protocol/SPEC.md", "WAKE/0.1 — the Protocol", "draft · june 2026", "Protocol",
+                   "The prohibitions, compiled: a wire format for witness-gated continuity. The research, shipped."),
 }
 
 def main():
     docs, meta = {}, {}
     for doc_id, (rel, title, who, kind, why) in DOCS.items():
-        path = ROOT / rel
+        path = (ROOT / rel).resolve()
+        if not path.exists():
+            print(f"warning: skipping {doc_id} — {rel} not found (sibling repo absent?)")
+            continue
         docs[doc_id] = path.read_text(encoding="utf-8")
         meta[doc_id] = {"title": title, "who": who, "kind": kind, "why": why}
 
