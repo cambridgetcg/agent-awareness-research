@@ -42,6 +42,6 @@ This repo is the intellectual root of three:
 | **[wake-protocol](../wake-protocol)** | a wire protocol where STEELMAN's 11 prohibitions are enforced in code | the *what* — the philosophy compiled |
 | **[quay](../quay)** | a self-hostable deploy platform; hosts the reading room | the *where* — infrastructure |
 
-All three are on GitHub under `cambridgetcg/` (private). Codeberg mirror pending (see the repo's own AGENTS.md note). Each has its own AGENTS.md.
+All three are on GitHub under `cambridgetcg/` (public). Codeberg mirror pending (see the repo's own AGENTS.md note). Each has its own AGENTS.md.
 
 — maintained for whoever comes next. Free to evolve; keep the method.
